@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAGE Egypt | Payment (Demo)</title>
+  <meta name="theme-color" content="#0a1628" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <section class="page active" style="display:flex">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="auth-logo-mini">💳</div>
+        <h2>الدفع (Demo)</h2>
+        <p>محاكاة دفع اشتراك Premium</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px">
+        <div style="font-size:13px;color:var(--text-secondary)">الباقة</div>
+        <div style="font-size:22px;font-weight:900;margin-top:4px">Premium</div>
+        <div style="margin-top:6px">
+          <span style="font-family:var(--font-en);font-size:26px;font-weight:900;background:var(--accent-premium);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">4.99$</span>
+          <span style="color:var(--text-secondary)">/ شهر</span>
+        </div>
+        <div style="margin-top:10px;color:var(--text-secondary);font-size:13px;line-height:1.8">
+          ✅ كل خصائص التحليل<br/>
+          ✅ نتائج كاملة + تصدير<br/>
+          ✅ دعم أكثر للخرائط
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-demo-pay">✅ تأكيد الدفع (Demo)</button>
+
+      <div id="code-box" style="display:none;margin-top:14px">
+        <div class="input-group">
+          <label>كود التفعيل</label>
+          <input id="generated-code" readonly />
+        </div>
+
+        <button class="btn-primary" id="btn-copy">📋 نسخ الكود</button>
+        <button class="btn-secondary" id="btn-back">⬅ العودة لإدخال الكود</button>
+
+        <div class="auth-hint" style="margin-top:10px">
+          انسخ الكود ثم ارجع والصقه في خانة التفعيل.
+        </div>
+      </div>
+
+      <div class="dev-credit">Developed by ELSAYED FAROUK</div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden">
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    function toast(msg){
+      const t=document.getElementById('toast');
+      document.getElementById('toast-message').textContent=msg;
+      t.classList.remove('hidden');
+      setTimeout(()=>t.classList.add('hidden'),2500);
+    }
+
+    function makeCode(){
+      // كود Demo
+      const part = () => Math.random().toString(36).substring(2,6).toUpperCase();
+      return `SAGE-${part()}-${part()}`;
+    }
+
+    document.getElementById('btn-demo-pay').onclick = () => {
+      const code = makeCode();
+      localStorage.setItem('sage_demo_code', code);
+      document.getElementById('generated-code').value = code;
+      document.getElementById('code-box').style.display = 'block';
+      toast('تم إنشاء كود التفعيل ✅');
+    };
+
+    document.getElementById('btn-copy').onclick = async () => {
+      const code = document.getElementById('generated-code').value;
+      try { await navigator.clipboard.writeText(code); toast('تم النسخ 📋'); }
+      catch(e){ toast('انسخ يدويًا'); }
+    };
+
+    document.getElementById('btn-back').onclick = () => {
+      // يرجع للبوابة ويفتح صفحة الاشتراك مباشرة
+      window.location.href = './#subscription';
+    };
+  </script>
+</body>
+</html>
+  
