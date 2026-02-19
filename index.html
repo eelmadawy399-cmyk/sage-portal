@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>SAGE Egypt | Portal</title>
-  <meta name="description" content="SAGE Egypt - Smart Agricultural Geo Expert" />
-  <meta name="theme-color" content="#0a1628" />
 
-  <!-- Favicon (Emoji) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+  <!-- ✅ PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a1628">
 
-  <!-- Fonts -->
+  <!-- Fonts (اختياري) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -32,6 +31,7 @@
       <div class="splash-loader"><div class="loader-bar"></div></div>
       <div class="splash-version">v1.0</div>
 
+      <!-- Developer -->
       <div class="dev-credit">Developed by ELSAYED FAROUK</div>
     </div>
   </section>
@@ -55,6 +55,7 @@
         الدفع شهري + كود تفعيل يظهر بعد الدفع
       </div>
 
+      <!-- Developer -->
       <div class="dev-credit">Developed by ELSAYED FAROUK</div>
     </div>
   </section>
@@ -72,7 +73,7 @@
 
       <div class="input-group" style="margin-top:16px">
         <label>كود التفعيل</label>
-        <input id="activation-code" type="text" placeholder="مثال: SAGE-2026" />
+        <input id="activation-code" type="text" placeholder="سيظهر بعد الدفع (Demo)" />
       </div>
 
       <button class="btn-primary" id="btn-activate">✅ تفعيل وفتح النسخة المدفوعة</button>
@@ -83,6 +84,7 @@
         بعد الدفع سيتم عرض كود التفعيل — انسخه والصقه هنا.
       </div>
 
+      <!-- Developer -->
       <div class="dev-credit">Developed by ELSAYED FAROUK</div>
     </div>
   </section>
@@ -93,5 +95,12 @@
   </div>
 
   <script src="app.js"></script>
+
+  <!-- ✅ PWA: Register Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js");
+    }
+  </script>
 </body>
 </html>
