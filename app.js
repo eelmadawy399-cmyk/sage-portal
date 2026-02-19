@@ -58,15 +58,67 @@ function gotoPage(id) {
   if (target) target.classList.add('active');
 }
 
+// -------- Apply demo code from URL/localStorage --------
+function applyDemoCodeIfAny() {
+  const params = new URLSearchParams(window.location.search);
+  const fromUrl = (params.get('code') || '').trim();
+  const fromStorage = (localStorage.getItem('sage_demo_code') || '').trim();
+  const code = (fromUrl || fromStorage || '').toUpperCase();
+
+  if (!code) return;
+
+  const input = $('activation-code');
+  if (input) {
+    input.value = code;
+    // لو عندك أي listeners على input
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    SAGE.toast('تم لصق كود التفعيل تلقائيًا ✅', 2500);
+  }
+
+  // تنظيف الـURL من ?code بعد الاستخدام (اختياري)
+  if (fromUrl) {
+    params.delete('code');
+    const newQuery = params.toString();
+    const newUrl =
+      window.location.pathname +
+      (newQuery ? `?${newQuery}` : '') +
+      window.location.hash;
+    window.history.replaceState({}, document.title, newUrl);
+  }
+}
+
+// -------- PWA: Service Worker Register --------
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', async () => {
+    try {
+      // لو مشروعك على GitHub Pages داخل repo sage-portal:
+      const reg = await navigator.serviceWorker.register(
+        '/sage-portal/service-worker.js',
+        { scope: '/sage-portal/' }
+      );
+      console.log('✅ SW registered:', reg.scope);
+    } catch (e) {
+      console.warn('❌ SW register failed:', e);
+    }
+  });
+}
+
 // -------- Boot --------
 document.addEventListener('DOMContentLoaded', () => {
+  registerServiceWorker();
+
   // Splash → Home
   setTimeout(() => gotoPage('page-home'), 2500);
 
-  // لو جاي من صفحة دفع Demo (اختياري)
+  // لو جاي من صفحة الدفع Demo
   if (location.hash === '#subscription') {
     gotoPage('page-subscription');
   }
+
+  // مهم: بعد ما الصفحة تجهز، حط الكود تلقائيًا لو موجود
+  applyDemoCodeIfAny();
 
   // زر مجاني
   const btnFree = $('btn-free');
@@ -90,12 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnPay = $('btn-pay');
   if (btnPay) {
     btnPay.addEventListener('click', () => {
-      // لو عملت payment.html لاحقًا: افتحها
-      // ده يخلي الديمو شكله احترافي بدل رسالة Stripe
       const hasDemoPayment = true;
 
       if (hasDemoPayment) {
-        window.location.href = './payment.html';
+        // على GitHub Pages داخل repo:
+        window.location.href = '/sage-portal/payment.html';
+        // لو محليًا:
+        // window.location.href = './payment.html';
         return;
       }
 
@@ -116,7 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const code = ((input && input.value) || '').trim().toUpperCase();
       if (!code) return SAGE.toast('اكتب كود التفعيل أولاً');
 
-      if (VALID_CODES.has(code)) {
+      // ✅ (اختياري) اعتبر أي كود SAGE-XXXX-XXXX صالح للديمو
+      const looksLikeDemo = /^SAGE-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code);
+
+      if (VALID_CODES.has(code) || looksLikeDemo) {
         setLastPlan('premium');
         SAGE.toast('تم التفعيل ✅ جاري فتح النسخة المدفوعة...');
         openSmart(GEE_URLS.premium);
@@ -137,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // (اختياري) لو عايز تعرض آخر اختيار للمستخدم في التوست
   const last = getLastPlan();
   if (last === 'premium') {
-    // لا تعمل redirect تلقائيًا—بس تلميح لطيف
     // SAGE.toast('آخر اختيار: Premium', 1800);
   }
 });
