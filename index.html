@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAGE Egypt | Portal</title>
+
+  <!-- Fonts (اختياري) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- SPLASH -->
+  <section id="page-splash" class="page active">
+    <div class="splash-glow"></div>
+    <div class="splash-container">
+      <div class="splash-icon">🌿</div>
+      <div class="splash-title">SAGE</div>
+      <div class="splash-subtitle">Egypt</div>
+      <div class="splash-tagline">Smart Agricultural Geo Expert</div>
+
+      <div class="splash-loader"><div class="loader-bar"></div></div>
+      <div class="splash-version">v1.0</div>
+    </div>
+  </section>
+
+  <!-- HOME / CHOOSE -->
+  <section id="page-home" class="page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="auth-logo-mini">🌿</div>
+        <h2>بوابة SAGE</h2>
+        <p>اختر النسخة التي تريد استخدامها</p>
+      </div>
+
+      <button class="btn-primary" id="btn-free">✅ دخول مجاني</button>
+
+      <div style="height:10px"></div>
+
+      <button class="btn-primary" id="btn-premium">⭐ فتح المدفوع</button>
+
+      <div class="auth-hint" style="margin-top:14px">
+        الدفع شهري + كود تفعيل يظهر بعد الدفع
+      </div>
+    </div>
+  </section>
+
+  <!-- PREMIUM (PAY + CODE) -->
+  <section id="page-subscription" class="page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="auth-logo-mini">⭐</div>
+        <h2>النسخة المدفوعة</h2>
+        <p>ادفع اشتراك شهري ثم أدخل كود التفعيل</p>
+      </div>
+
+      <button class="btn-primary" id="btn-pay">💳 ادفع اشتراك شهري</button>
+
+      <div class="input-group" style="margin-top:16px">
+        <label>كود التفعيل</label>
+        <input id="activation-code" type="text" placeholder="مثال: ABCD-1234-XYZ9" />
+      </div>
+
+      <button class="btn-primary" id="btn-activate">✅ تفعيل وفتح المدفوع</button>
+
+      <button class="btn-secondary" id="btn-back">⬅ رجوع</button>
+
+      <div class="auth-hint">
+        بعد الدفع سيتم عرض كود التفعيل — انسخه والصقه هنا.
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden">
+    <span id="toast-message"></span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
