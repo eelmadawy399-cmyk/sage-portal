@@ -42,7 +42,7 @@
         <button class="btn-secondary" id="btn-back">⬅ العودة لإدخال الكود</button>
 
         <div class="auth-hint" style="margin-top:10px">
-          انسخ الكود ثم ارجع والصقه في خانة التفعيل.
+          انسخ الكود ثم ارجع — سيتم لصقه تلقائيًا في خانة التفعيل.
         </div>
       </div>
 
@@ -68,25 +68,47 @@
       return `SAGE-${part()}-${part()}`;
     }
 
+    // نسخ احتياطي لو Clipboard API فشل
+    function fallbackCopy(){
+      const inp = document.getElementById('generated-code');
+      inp.focus();
+      inp.select();
+      inp.setSelectionRange(0, 99999);
+      try { return document.execCommand('copy'); }
+      catch(e){ return false; }
+    }
+
     document.getElementById('btn-demo-pay').onclick = () => {
       const code = makeCode();
       localStorage.setItem('sage_demo_code', code);
-      document.getElementById('generated-code').value = code;
+
+      const inp = document.getElementById('generated-code');
+      inp.value = code;
       document.getElementById('code-box').style.display = 'block';
+
+      setTimeout(() => { inp.focus(); inp.select(); }, 50);
       toast('تم إنشاء كود التفعيل ✅');
     };
 
     document.getElementById('btn-copy').onclick = async () => {
       const code = document.getElementById('generated-code').value;
-      try { await navigator.clipboard.writeText(code); toast('تم النسخ 📋'); }
-      catch(e){ toast('انسخ يدويًا'); }
+      try {
+        await navigator.clipboard.writeText(code);
+        toast('تم النسخ 📋');
+      } catch(e){
+        const ok = fallbackCopy();
+        toast(ok ? 'تم النسخ 📋' : 'فشل النسخ — انسخ يدويًا');
+      }
     };
 
     document.getElementById('btn-back').onclick = () => {
-      // يرجع للبوابة ويفتح صفحة الاشتراك مباشرة
-      window.location.href = './#subscription';
+      // يرجع للبوابة ويفتح صفحة الاشتراك + يمرر الكود في الرابط
+      const code = localStorage.getItem('sage_demo_code') || '';
+      // لو على GitHub Pages داخل repo sage-portal:
+      window.location.href = `/sage-portal/index.html?code=${encodeURIComponent(code)}#subscription`;
+      // لو شغال محليًا أو مسار مختلف، استخدم بدلها:
+      // window.location.href = `./index.html?code=${encodeURIComponent(code)}#subscription`;
     };
   </script>
 </body>
 </html>
-  
